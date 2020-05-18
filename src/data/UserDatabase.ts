@@ -1,10 +1,9 @@
 import { BaseDataBase } from "./BaseDatabase";
-import {v4} from "uuid";
 
-export class UserDatabase extends BaseDataBase{
+export class UserDatabase extends BaseDataBase {
     tableName: string = "UsersLabook";
 
-    public async signup(name: string, email: string, id:string, password:string){
+    public async signup(name: string, email: string, id: string, password: string) {
         console.log(name, email, id, password)
         return await super.getConnection()
             .insert({
@@ -14,22 +13,19 @@ export class UserDatabase extends BaseDataBase{
                 password
             })
             .into(this.tableName)
-
-        // return await super.getConnection()
-        //     .select("*")
-        //     .from("UsersLabook")
-
-        //raw(`INSERT INTO ${this.tableName} (name, email, id, password)
-        //VALUES ('${name}', '${email}', '${id}', '${password}')`);
     }
 
     public async getUserEmail(email: string): Promise<any> {
         const result = await this.getConnection()
-          .select("*")
-          .from(this.tableName)
-          .where({ email });
-    
+            .select("*")
+            .from(this.tableName)
+            .where({ email });
+
         return result[0];
-      }
+    }
+
+    public async addNewFriendship(id_inviter: string, id_invited: string): Promise<any> {
+        await this.getConnection().insert({ id_inviter, id_invited }).into(this.tableName)
+    }
 
 }
