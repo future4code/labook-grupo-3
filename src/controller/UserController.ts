@@ -66,4 +66,42 @@ export class UserController {
               });
             }
     }
+
+    async startNewFriendship(req:Request, res:Response){
+      try{
+      const tokenCreator = new Authenticator()
+      const verifyToken = tokenCreator.getData(req.headers.authorization as string)
+      const userData = {
+        id: req.body.id
+      }
+      const userManager = await new UserBusiness().addFriend(userData.id, verifyToken.id)
+      res.status(200).send({
+        message: 'you got a new friend!'
+      })
+    }
+    catch(err){
+      res.status(400).send({
+        message: err.message
+      })
+    }
+    }
+
+    async deleteFriendship(req:Request, res:Response){
+      try{
+        const tokenCreator = new Authenticator()
+        const verifyToken = tokenCreator.getData(req.headers.authorization as string)
+        const userData = {
+          id: req.body.id
+        }
+        const userManager = await new UserBusiness().deleteFriend(userData.id)
+        res.status(200).send({
+          message: 'Friendship finished'
+        })
+      }
+      catch(err){
+        res.status(400).send({
+          message: err.message
+        })
+      }
+    }
 }
