@@ -25,7 +25,11 @@ export class UserDatabase extends BaseDataBase {
     }
 
     public async addNewFriendship(id_inviter: string, id_invited: string): Promise<any> {
-        await this.getConnection().insert({ id_inviter, id_invited }).into(this.tableName)
+        await this.getConnection().insert({ id_inviter, id_invited }).into('RelationsLabenu')
+    }
+
+    public async deleteFriendship(id_invited: string): Promise<any> {
+        await this.getConnection().delete().from('RelationsLabenu').where({ id_invited })
     }
 
 }
