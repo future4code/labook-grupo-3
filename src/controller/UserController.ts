@@ -74,7 +74,7 @@ export class UserController {
       const userData = {
         id: req.body.id
       }
-      const userManager = await new UserBusiness().addFriend(userData.id, verifyToken.id)
+      const userManager = await new UserBusiness().addFriend(verifyToken.id, userData.id)
       res.status(200).send({
         message: 'you got a new friend!'
       })
