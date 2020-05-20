@@ -24,4 +24,18 @@ export class PostDatabase extends BaseDataBase {
                 "${createdAt}"
             )`)
         }
+
+    public async getAllPosts():Promise<any> {
+        const result = await this.getConnection().raw(`
+        SELECT * FROM sagan_andrius_db.PostsLabook 
+        ORDER BY createdAt DESC;`)
+        return result[0]
+    }
+
+    public async getPostsByType(type: string):Promise<any> {
+        const result = await this.getConnection().raw(`
+        SELECT * FROM sagan_andrius_db.PostsLabook 
+        WHERE type = "${type}" ORDER BY createdAt DESC;`)
+        return result[0]
+    }
 }
