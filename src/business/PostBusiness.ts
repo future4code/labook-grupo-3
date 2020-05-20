@@ -8,6 +8,14 @@ export class PostBusiness {
         const idCreator = new IdGenerator()
         const id = idCreator.generate()
 
-        return new PostDatabase().createPost(id, image, description, type, id_user);
+        return await new PostDatabase().createPost(id, image, description, type, id_user);
+    }
+
+    public async getFeed () {
+        return await new PostDatabase().getAllPosts();
+    }
+
+    public async getFeedType (type: string) {
+        return await new PostDatabase().getPostsByType(type)
     }
 }
