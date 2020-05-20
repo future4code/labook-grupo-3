@@ -48,5 +48,9 @@ export class PostDatabase extends BaseDataBase {
         if (result[0][0]===undefined){
             throw new Error('Você não curtiu esse post');
         }
+
+    public async likePost(id_user: string, id_post: string) {
+        await this.getConnection().insert({ id_user, id_post }).into('LikesLabook')
+
     }
 }
