@@ -18,4 +18,8 @@ export class PostBusiness {
     public async getFeedType (type: string) {
         return await new PostDatabase().getPostsByType(type)
     }
+
+    public async unLike (idUser: string, idPost: string){
+        return await new PostDatabase().setUnlikePost(idUser, idPost)
+    }
 }
