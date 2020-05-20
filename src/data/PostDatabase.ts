@@ -38,4 +38,8 @@ export class PostDatabase extends BaseDataBase {
         WHERE type = "${type}" ORDER BY createdAt DESC;`)
         return result[0]
     }
+
+    public async likePost(id_user: string, id_post: string) {
+        await this.getConnection().insert({ id_user, id_post }).into('LikesLabook')
+    }
 }
