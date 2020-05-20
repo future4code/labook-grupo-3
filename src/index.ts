@@ -7,6 +7,7 @@ import { v4 } from "uuid";
 import { UserController } from "./controller/UserController";
 import { userRouter } from "./routes/UserRouter";
 import { postRouter } from "./routes/PostRouter";
+import { commentsRouter } from "./routes/CommentRouter";
 
 dotenv.config();
 const app = express();
@@ -25,6 +26,7 @@ app.use(express.json());
 
 app.use("/users/", userRouter);
 app.use("/posts", postRouter);
+app.use("/comments", commentsRouter)
 
 app.get("/", (req: Request, res: Response) => {
   res.status(200).send({ message: "success" });
