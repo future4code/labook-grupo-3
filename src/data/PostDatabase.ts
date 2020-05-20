@@ -34,8 +34,24 @@ export class PostDatabase extends BaseDataBase {
 
     public async getPostsByType(type: string):Promise<any> {
         const result = await this.getConnection().raw(`
-        SELECT * FROM sagan_andrius_db.PostsLabook 
-        WHERE type = "${type}" ORDER BY createdAt DESC;`)
+            SELECT * FROM sagan_andrius_db.PostsLabook 
+            WHERE type = "${type}" ORDER BY createdAt DESC;`)
         return result[0]
+    }
+
+    public async setUnlikePost(idUser: string, idPost: string):Promise<any>{
+        const result = await this.getConnection().raw(`
+            DELETE FROM LikesLabook
+            WHERE id_user = "${idUser}"
+            AND id_post = "${idPost}";
+        `)
+        // console.log(result[0].affectedRows)
+        if (result[0].affectedRows===0){
+            throw new Error('Você não curtiu esse post');
+        }
+    }
+    public async likePost(id_user: string, id_post: string) {
+        await this.getConnection().insert({ id_user, id_post }).into('LikesLabook')
+
     }
 }
