@@ -80,4 +80,22 @@ export class PostController {
             })
         }
     }
+
+    public async unlike(req: Request, res: Response) {
+        try{
+            const idPost = req.body.idPost
+            const token = req.headers.authorization as string;
+            const authenticator = new Authenticator().getData(token);
+
+            const feed = await new PostBusiness().unLike(authenticator.id, idPost)
+
+            res.status(200).send({
+                message: "Post descutido com sucesso"
+            })
+        }catch (error) {
+            res.status(400).send({
+                message: error.message
+            })
+        }
+    }
 }

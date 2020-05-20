@@ -9,4 +9,7 @@ postRouter.get("/feed", new PostController().feed)
 
 postRouter.get("/feed/:type", new PostController().feedType)
 
+postRouter.put("/unlike", new PostController().unlike)
+
 postRouter.post("/like/:id", new PostController().likePost)
+
