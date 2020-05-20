@@ -90,7 +90,7 @@ export class PostController {
             const feed = await new PostBusiness().unLike(authenticator.id, idPost)
 
             res.status(200).send({
-                message: "Post descutido com sucesso"
+                message: "Post descurtido com sucesso"
             })
         }catch (error) {
             res.status(400).send({
