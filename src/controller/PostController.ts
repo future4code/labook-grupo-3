@@ -1,4 +1,4 @@
-import {Request, Response} from "express";
+import { Request, Response } from "express";
 import { Authenticator } from "../services/Authenticator";
 import { PostBusiness } from "../business/PostBusiness";
 
@@ -30,10 +30,7 @@ export class PostController {
     }
 
     public async feed(req: Request, res: Response) {
-        try {   
-            console.log("Até aqui ok")
-
-
+        try {
             const token = req.headers.authorization as string;
             const authenticator = new Authenticator().getData(token);
 
@@ -61,7 +58,23 @@ export class PostController {
             res.status(200).send({
                 feed: feed
             })
-        }catch (error) {
+        } catch (error) {
+            res.status(400).send({
+                message: error.message
+            })
+        }
+    }
+
+    public async likePost(req: Request, res: Response) {
+        try {
+            const token = req.headers.authorization as string;
+            const authenticator = new Authenticator().getData(token);
+            await new PostBusiness().setLike(authenticator.id, req.params.id)
+            res.status(200).send({
+                message: 'success'
+            })
+        }
+        catch (error) {
             res.status(400).send({
                 message: error.message
             })

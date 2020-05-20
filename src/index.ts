@@ -24,7 +24,7 @@ const connection = knex({
 app.use(express.json());
 
 app.use("/users/", userRouter);
-app.use("/posts", postRouter);
+app.use("/posts/", postRouter);
 
 app.get("/", (req: Request, res: Response) => {
   res.status(200).send({ message: "success" });
