@@ -1,10 +1,9 @@
 import {PostDatabase} from "../data/PostDatabase";
 import {IdGenerator} from "../services/IdGenerator";
-import { Authenticator } from "../services/Authenticator";
 
 export class PostBusiness {
 
-    public async newPost(image: string, description: string, type: string, id_user) {
+    public async newPost(image: string, description: string, type: string, id_user: string) {
         const idCreator = new IdGenerator()
         const id = idCreator.generate()
 
@@ -20,8 +19,7 @@ export class PostBusiness {
     }
 
     public async unLike (idUser: string, idPost: string){
-        console.log(idUser)
-        console.log(idPost)
+
         return await new PostDatabase().setUnlikePost(idUser, idPost)
 
     }

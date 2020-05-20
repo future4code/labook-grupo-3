@@ -4,7 +4,6 @@ export class UserDatabase extends BaseDataBase {
     tableName: string = "UsersLabook";
 
     public async signup(name: string, email: string, id: string, password: string) {
-        console.log(name, email, id, password)
         return await super.getConnection()
             .insert({
                 id,
