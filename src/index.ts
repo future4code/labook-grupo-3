@@ -3,8 +3,6 @@ import { Request, Response } from "express";
 import express from "express";
 import { AddressInfo } from "net";
 import knex from "knex";
-import { v4 } from "uuid";
-import { UserController } from "./controller/UserController";
 import { userRouter } from "./routes/UserRouter";
 import { postRouter } from "./routes/PostRouter";
 import { commentRouter } from "./routes/CommentRouter";

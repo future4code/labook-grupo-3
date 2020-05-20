@@ -1,10 +1,8 @@
-import dotenv from "dotenv";
 import {BaseDataBase} from "./BaseDatabase";
 import moment from 'moment'
 
 export class PostDatabase extends BaseDataBase {
     tablename: string = "PostsLabook"
-
 
     public async createPost(
         id: string, 
@@ -45,7 +43,7 @@ export class PostDatabase extends BaseDataBase {
             WHERE id_user = "${idUser}"
             AND id_post = "${idPost}";
         `)
-        // console.log(result[0].affectedRows)
+
         if (result[0].affectedRows===0){
             throw new Error('Você não curtiu esse post');
         }
