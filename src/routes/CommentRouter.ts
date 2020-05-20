@@ -1,7 +1,7 @@
 import express from "express";
 import { CommentController} from "../controller/CommentController"; 
 
-export const commentsRouter = express.Router(); 
+export const commentRouter = express.Router(); 
 
-commentsRouter.post("/commentpost", new CommentController().commentPost)
+commentRouter.post("/commentpost", new CommentController().commentPost)
 
