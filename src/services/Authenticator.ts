@@ -5,7 +5,7 @@ export class Authenticator {
   public generateToken(
     input: AuthenticationData,
     expiresIn: string = process.env.EXPIRES_IN!
-    ): string {
+  ): string {
     const token = jwt.sign(
       {
         id: input.id,

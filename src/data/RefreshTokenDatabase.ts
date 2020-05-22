@@ -4,10 +4,10 @@ export class RefreshTokenDatabase extends BaseDataBase {
     tableName: string = "RefreshTokenLabook";
 
     public async createRefreshToken(
-        token:string,
-        device:string,
-        isActive:boolean,
-        userId:string
+        token: string,
+        device: string,
+        isActive: boolean,
+        userId: string
     ): Promise<void> {
         await this.getConnection().raw(`
             INSERT INTO RefreshTokenLabook (refresh_token, device, is_active, user_id) 
@@ -20,7 +20,7 @@ export class RefreshTokenDatabase extends BaseDataBase {
         `)
     }
 
-    public async getRefreshToken(token:string): Promise<any> {
+    public async getRefreshToken(token: string): Promise<any> {
         const result = await this.getConnection().raw(`
             SELECT * FROM RefreshTokenLabook 
             WHERE refresh_token = "${token}"
@@ -36,7 +36,7 @@ export class RefreshTokenDatabase extends BaseDataBase {
         }
     }
 
-    public async getRefreshTokenByUserIdAndDevice(userId:string, device:string): Promise<any> {
+    public async getRefreshTokenByUserIdAndDevice(userId: string, device: string): Promise<any> {
         const result = await this.getConnection().raw(`
             SELECT * FROM RefreshTokenLabook 
             WHERE user_id = "${userId}" AND device = "${device}"
@@ -44,7 +44,7 @@ export class RefreshTokenDatabase extends BaseDataBase {
 
         const refreshTokenDb = result[0][0]
 
-        if (refreshTokenDb === undefined){
+        if (refreshTokenDb === undefined) {
             return undefined
         }
 
@@ -56,10 +56,14 @@ export class RefreshTokenDatabase extends BaseDataBase {
         }
     }
 
-    public async deleteRefreshToken(token:string){
+    public async deleteRefreshToken(token: string) {
         await this.getConnection().raw(`
             DELETE FROM RefreshTokenLabook 
             WHERE refresh_token = "${token}"
         `)
+    }
+
+    public async destroyConnection(): Promise<void> {
+        await this.getConnection().destroy()
     }
 }
