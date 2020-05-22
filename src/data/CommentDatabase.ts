@@ -1,6 +1,6 @@
-import dotenv from "dotenv";
+// import dotenv from "dotenv";
 import {BaseDataBase} from "./BaseDatabase";
-import moment from 'moment';
+// import moment from 'moment';
 
 export class CommentDatabase extends BaseDataBase{
     tablename: string = "CommentsLabook"

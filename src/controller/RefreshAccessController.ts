@@ -1,6 +1,6 @@
 import { Request, Response } from "express"
 import { Authenticator } from "../services/Authenticator"
-import { UserDatabase } from "../data/UserDatabase"
+// import { UserDatabase } from "../data/UserDatabase"
 
 export class RefreshAccessController {
     public refreshAccessToken = async (req: Request, res: Response) =>{

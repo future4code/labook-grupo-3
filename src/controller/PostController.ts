@@ -67,9 +67,10 @@ export class PostController {
 
     public async likePost(req: Request, res: Response) {
         try {
+
             const token = req.headers.authorization as string;
             const authenticator = new Authenticator().getData(token);
-            await new PostBusiness().setLike(authenticator.id, req.params.id)
+            await new PostBusiness().setLike(authenticator.id, req.body.idPost)
             res.status(200).send({
                 message: 'success'
             })
@@ -87,7 +88,7 @@ export class PostController {
             const token = req.headers.authorization as string;
             const authenticator = new Authenticator().getData(token);
 
-            const feed = await new PostBusiness().unLike(authenticator.id, idPost)
+            await new PostBusiness().unLike(authenticator.id, idPost)
 
             res.status(200).send({
                 message: "Post descurtido com sucesso"

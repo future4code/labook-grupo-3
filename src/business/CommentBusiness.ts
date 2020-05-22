@@ -1,4 +1,4 @@
-import {PostDatabase} from "../data/PostDatabase";
+// import {PostDatabase} from "../data/PostDatabase";
 import {CommentDatabase} from "../data/CommentDatabase";
 import {IdGenerator} from "../services/IdGenerator";
 

@@ -1,6 +1,6 @@
 import {Request, Response} from "express";
 import { Authenticator } from "../services/Authenticator";
-import { IdGenerator } from "../services/IdGenerator";
+// import { IdGenerator } from "../services/IdGenerator";
 import { CommentBusiness } from "../business/CommentBusiness";
 
 export class CommentController {

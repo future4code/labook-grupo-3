@@ -1,8 +1,7 @@
 import { BaseDataBase } from "./BaseDatabase";
 
-
 export class RefreshTokenDatabase extends BaseDataBase {
-    tableName: string = "RefreshTokenAndrius";
+    tableName: string = "RefreshTokenLabook";
 
     public async createRefreshToken(
         token:string,
@@ -10,13 +9,8 @@ export class RefreshTokenDatabase extends BaseDataBase {
         isActive:boolean,
         userId:string
     ): Promise<void> {
-        // console.log("olha ae")
-        // console.log(token)
-        // console.log(device)
-        // console.log(isActive)
-        // console.log(userId)
         await this.getConnection().raw(`
-            INSERT INTO RefreshTokenAndrius (refresh_token, device, is_active, user_id) 
+            INSERT INTO RefreshTokenLabook (refresh_token, device, is_active, user_id) 
             VALUES(
                 "${token}",
                 "${device}",
@@ -28,7 +22,7 @@ export class RefreshTokenDatabase extends BaseDataBase {
 
     public async getRefreshToken(token:string): Promise<any> {
         const result = await this.getConnection().raw(`
-            SELECT * FROM RefreshTokenAndrius 
+            SELECT * FROM RefreshTokenLabook 
             WHERE refresh_token = "${token}"
         `)
 
@@ -44,7 +38,7 @@ export class RefreshTokenDatabase extends BaseDataBase {
 
     public async getRefreshTokenByUserIdAndDevice(userId:string, device:string): Promise<any> {
         const result = await this.getConnection().raw(`
-            SELECT * FROM RefreshTokenAndrius 
+            SELECT * FROM RefreshTokenLabook 
             WHERE user_id = "${userId}" AND device = "${device}"
         `)
 
@@ -64,7 +58,7 @@ export class RefreshTokenDatabase extends BaseDataBase {
 
     public async deleteRefreshToken(token:string){
         await this.getConnection().raw(`
-            DELETE FROM RefreshTokenAndrius 
+            DELETE FROM RefreshTokenLabook 
             WHERE refresh_token = "${token}"
         `)
     }
