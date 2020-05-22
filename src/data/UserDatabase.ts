@@ -31,4 +31,8 @@ export class UserDatabase extends BaseDataBase {
         await this.getConnection().delete().from('RelationsLabook').where({ id_invited })
     }
 
+    public async destroyConnection(): Promise<void> {
+        await this.getConnection().destroy()
+    }
+
 }

@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { Authenticator } from "../services/Authenticator";
 import { PostBusiness } from "../business/PostBusiness";
+import { PostDatabase } from "../data/PostDatabase";
 
 export class PostController {
 
@@ -27,6 +28,9 @@ export class PostController {
                 message: error.message
             })
         }
+        finally {
+            new PostDatabase().destroyConnection()
+        }
     }
 
     public async feed(req: Request, res: Response) {
@@ -44,6 +48,9 @@ export class PostController {
             res.status(400).send({
                 message: error.message
             })
+        }
+        finally {
+            new PostDatabase().destroyConnection()
         }
     }
 
@@ -63,6 +70,9 @@ export class PostController {
                 message: error.message
             })
         }
+        finally {
+            new PostDatabase().destroyConnection()
+        }
     }
 
     public async likePost(req: Request, res: Response) {
@@ -70,6 +80,7 @@ export class PostController {
 
             const token = req.headers.authorization as string;
             const authenticator = new Authenticator().getData(token);
+            console.log(authenticator.id)
             await new PostBusiness().setLike(authenticator.id, req.body.idPost)
             res.status(200).send({
                 message: 'success'
@@ -80,10 +91,13 @@ export class PostController {
                 message: error.message
             })
         }
+        finally {
+            new PostDatabase().destroyConnection()
+        }
     }
 
     public async unlike(req: Request, res: Response) {
-        try{
+        try {
             const idPost = req.body.idPost
             const token = req.headers.authorization as string;
             const authenticator = new Authenticator().getData(token);
@@ -93,10 +107,13 @@ export class PostController {
             res.status(200).send({
                 message: "Post descurtido com sucesso"
             })
-        }catch (error) {
+        } catch (error) {
             res.status(400).send({
                 message: error.message
             })
+        }
+        finally {
+            new PostDatabase().destroyConnection()
         }
     }
 }

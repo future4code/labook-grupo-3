@@ -1,9 +1,8 @@
-// import {PostDatabase} from "../data/PostDatabase";
-import {CommentDatabase} from "../data/CommentDatabase";
-import {IdGenerator} from "../services/IdGenerator";
+import { CommentDatabase } from "../data/CommentDatabase";
+import { IdGenerator } from "../services/IdGenerator";
 
 export class CommentBusiness {
-    
+
     public async commentPost(id_user: string, id_post: string, comment: string) {
         const idCreator = new IdGenerator()
         const id = idCreator.generate()

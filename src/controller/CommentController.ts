@@ -1,13 +1,13 @@
-import {Request, Response} from "express";
+import { Request, Response } from "express";
 import { Authenticator } from "../services/Authenticator";
-// import { IdGenerator } from "../services/IdGenerator";
 import { CommentBusiness } from "../business/CommentBusiness";
+import { CommentDatabase } from "../data/CommentDatabase";
 
 export class CommentController {
 
     public async commentPost(req: Request, res: Response) {
         try {
-            
+
             const commentData = {
                 id_post: req.body.id_post,
                 comment: req.body.comment
@@ -26,6 +26,9 @@ export class CommentController {
             res.status(400).send({
                 message: error.message
             })
+        }
+        finally {
+            new CommentDatabase().destroyConnection()
         }
     }
 }

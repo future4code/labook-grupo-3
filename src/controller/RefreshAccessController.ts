@@ -1,9 +1,9 @@
 import { Request, Response } from "express"
 import { Authenticator } from "../services/Authenticator"
-// import { UserDatabase } from "../data/UserDatabase"
+import { RefreshTokenDatabase } from "../data/RefreshTokenDatabase"
 
 export class RefreshAccessController {
-    public refreshAccessToken = async (req: Request, res: Response) =>{
+    public refreshAccessToken = async (req: Request, res: Response) => {
         try {
             const refreshToken = req.body.refreshToken
             const device = req.body.device
@@ -13,13 +13,9 @@ export class RefreshAccessController {
             console.log("ultimo da noite")
             console.log(refreshTokenData)
             console.log(refreshTokenData.device)
-            // console.log(device)
-            if (refreshTokenData.device !== device){
+            if (refreshTokenData.device !== device) {
                 throw new Error("O accesstoken não foi gerado para este dipositivo")
             }
-
-            // const userDatabase = new UserDatabase()
-            // const user = await userDatabase.getUserEmail
 
             const accessToken = authenticator.generateToken(
                 {
@@ -33,8 +29,11 @@ export class RefreshAccessController {
             })
 
         }
-        catch(err) {
-            res.status(400).send({message: err.message})
+        catch (err) {
+            res.status(400).send({ message: err.message })
+        }
+        finally {
+            new RefreshTokenDatabase().destroyConnection()
         }
     }
 }
