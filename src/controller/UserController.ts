@@ -12,15 +12,28 @@ export class UserController {
             const userData = {
                 name: req.body.name,
                 email: req.body.email,
-                password: req.body.password
+                password: req.body.password,
+                device: req.body.device
             }
 
             const passwordHash = new HashManager()
             const hash = await passwordHash.hash(userData.password)
             const idCreator = new IdGenerator()
             const id = idCreator.generate()
+
+                      //
+            
+
             const tokenCreator = new Authenticator()
-            const token = tokenCreator.generateToken({id})
+            const token = tokenCreator.generateToken({id}, process.env.EXPIRES_IN)
+
+            const refreshToken = tokenCreator.generateToken(
+              {
+                 id,
+                 device: userData.device
+              },
+              process.env.REFRESH_TOKEN_EXPIRES_IN
+            )
 
             new UserBusiness().signup(userData.name, userData.email, id, hash)
             res.status(200).send({ token });

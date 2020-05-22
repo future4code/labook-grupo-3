@@ -17,4 +17,12 @@ export abstract class BaseDataBase{
             }
           })
     }
+
+    protected convertBooleanToTinyint(value: boolean): number {
+      return value? 1 : 0
+    }
+
+    protected convertTinyintToBoolean(value: number): boolean {
+      return value === 1
+    }
 }
