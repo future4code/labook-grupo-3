@@ -4,6 +4,7 @@ import { HashManager } from "../services/HashManager";
 import { Authenticator } from "../services/Authenticator";
 import { IdGenerator } from "../services/IdGenerator";
 import { UserDatabase } from "../data/UserDatabase";
+import { RefreshTokenDatabase } from "../data/RefreshTokenDatabase";
 
 export class UserController {
 
@@ -27,6 +28,8 @@ export class UserController {
             const tokenCreator = new Authenticator()
             const token = tokenCreator.generateToken({id}, process.env.EXPIRES_IN)
 
+            await new UserBusiness().signup(userData.name, userData.email, id, hash)
+
             const refreshToken = tokenCreator.generateToken(
               {
                  id,
@@ -35,8 +38,17 @@ export class UserController {
               process.env.REFRESH_TOKEN_EXPIRES_IN
             )
 
-            new UserBusiness().signup(userData.name, userData.email, id, hash)
-            res.status(200).send({ token });
+            const refreshTokenDb = new RefreshTokenDatabase()
+            await refreshTokenDb.createRefreshToken(
+              refreshToken,
+              userData.device,
+              true,
+              id
+            )
+            res.status(200).send({ 
+              acessToken: token,
+              refreshToken: refreshToken
+             });
         } catch (err) {
             res.status(400).send({ err: err });
         }

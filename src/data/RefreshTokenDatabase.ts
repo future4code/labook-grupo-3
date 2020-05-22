@@ -10,13 +10,18 @@ export class RefreshTokenDatabase extends BaseDataBase {
         isActive:boolean,
         userId:string
     ): Promise<void> {
+        console.log("olha ae")
+        console.log(token)
+        console.log(device)
+        console.log(isActive)
+        console.log(userId)
         await this.getConnection().raw(`
-            INSERT INTO ${RefreshTokenDatabase.tableName} (refresh_token, device, is_active, user_id) 
+            INSERT INTO RefreshTokenAndrius (refresh_token, device, is_active, user_id) 
             VALUES(
                 "${token}",
-                "${device},
+                "${device}",
                 ${this.convertBooleanToTinyint(isActive)},
-                "${userId}
+                "${userId}"
             )
         `)
     }
