@@ -10,11 +10,11 @@ export class RefreshTokenDatabase extends BaseDataBase {
         isActive:boolean,
         userId:string
     ): Promise<void> {
-        console.log("olha ae")
-        console.log(token)
-        console.log(device)
-        console.log(isActive)
-        console.log(userId)
+        // console.log("olha ae")
+        // console.log(token)
+        // console.log(device)
+        // console.log(isActive)
+        // console.log(userId)
         await this.getConnection().raw(`
             INSERT INTO RefreshTokenAndrius (refresh_token, device, is_active, user_id) 
             VALUES(
@@ -28,7 +28,7 @@ export class RefreshTokenDatabase extends BaseDataBase {
 
     public async getRefreshToken(token:string): Promise<any> {
         const result = await this.getConnection().raw(`
-            SELECT * FROM ${RefreshTokenDatabase.tableName} 
+            SELECT * FROM RefreshTokenAndrius 
             WHERE refresh_token = "${token}"
         `)
 
@@ -42,32 +42,30 @@ export class RefreshTokenDatabase extends BaseDataBase {
         }
     }
 
-    // public async signup(name: string, email: string, id: string, password: string) {
-    //     return await super.getConnection()
-    //         .insert({
-    //             id,
-    //             name,
-    //             email,
-    //             password
-    //         })
-    //         .into(this.tableName)
-    // }
+    public async getRefreshTokenByUserIdAndDevice(userId:string, device:string): Promise<any> {
+        const result = await this.getConnection().raw(`
+            SELECT * FROM RefreshTokenAndrius 
+            WHERE user_id = "${userId}" AND device = "${device}"
+        `)
 
-    // public async getUserEmail(email: string): Promise<any> {
-    //     const result = await this.getConnection()
-    //         .select("*")
-    //         .from(this.tableName)
-    //         .where({ email });
+        const refreshTokenDb = result[0][0]
 
-    //     return result[0];
-    // }
+        if (refreshTokenDb === undefined){
+            return undefined
+        }
 
-    // public async addNewFriendship(id_inviter: string, id_invited: string): Promise<any> {
-    //     await this.getConnection().insert({ id_inviter, id_invited }).into('RelationsLabook')
-    // }
+        return {
+            refreshToken: refreshTokenDb.refresh_token,
+            device: refreshTokenDb.device,
+            userId: refreshTokenDb.user_id,
+            isActive: this.convertTinyintToBoolean(refreshTokenDb.is_active)
+        }
+    }
 
-    // public async deleteFriendship(id_invited: string): Promise<any> {
-    //     await this.getConnection().delete().from('RelationsLabook').where({ id_invited })
-    // }
-
+    public async deleteRefreshToken(token:string){
+        await this.getConnection().raw(`
+            DELETE FROM RefreshTokenAndrius 
+            WHERE refresh_token = "${token}"
+        `)
+    }
 }

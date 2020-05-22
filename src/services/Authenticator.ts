@@ -8,7 +8,8 @@ export class Authenticator {
     ): string {
     const token = jwt.sign(
       {
-        id: input.id
+        id: input.id,
+        device: input.device
       },
       process.env.JWT_KEY as string,
       {

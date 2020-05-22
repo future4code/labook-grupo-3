@@ -6,6 +6,7 @@ import knex from "knex";
 import { userRouter } from "./routes/UserRouter";
 import { postRouter } from "./routes/PostRouter";
 import { commentRouter } from "./routes/CommentRouter";
+import { refreshRouter } from "./routes/RefreshRouter"
 
 dotenv.config();
 const app = express();
@@ -25,6 +26,7 @@ app.use(express.json());
 app.use("/users/", userRouter);
 app.use("/comments/", commentRouter);
 app.use("/posts/", postRouter);
+app.use("/refresh/", refreshRouter);
 
 app.get("/", (req: Request, res: Response) => {
   res.status(200).send({ message: "success" });

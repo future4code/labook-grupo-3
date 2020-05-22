@@ -58,7 +58,8 @@ export class UserController {
         try {
             const userData = {
                 email: req.body.email,
-                password: req.body.password
+                password: req.body.password,
+                device: req.body.device
             }
 
             if (userData.password.length < 6 || userData.email.length === 0 && !userData.email.includes("@")) {
@@ -80,10 +81,38 @@ export class UserController {
           
               const authenticator = new Authenticator();
               const token = authenticator.generateToken({
-                id: user.id
-              });
+                id: user.id,
+                device: userData.device
+              }, process.env.EXPIRES_IN);
+
+              const refreshToken = authenticator.generateToken(
+                {
+                  id: user.id,
+                  device: userData.device
+                },
+                process.env.REFRESH_TOKEN_EXPIRES_IN
+              )
+
+
+
+              const refreshTokenDatabase = new RefreshTokenDatabase()
+
+              const refreshTokenFromDb = await refreshTokenDatabase.getRefreshTokenByUserIdAndDevice(user.id, userData.device)
+              if (refreshTokenFromDb !== undefined) {
+                await refreshTokenDatabase.deleteRefreshToken(refreshTokenFromDb.refreshToken)
+              }
+
+              await refreshTokenDatabase.createRefreshToken(
+                refreshToken,
+                userData.device,
+                true,
+                user.id
+              )
           
-              res.status(200).send({ token });
+              res.status(200).send({ 
+                acessToken: token,
+                refreshToken: refreshToken
+               });
           
           
             } catch (err) {
