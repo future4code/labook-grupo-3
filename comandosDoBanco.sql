@@ -21,3 +21,11 @@ CREATE TABLE PostsLabook (
     id_user VARCHAR(255) NOT NULL,
 	FOREIGN KEY (id_user) REFERENCES UsersLabook(id)
 );
+
+CREATE TABLE RefreshTokenLabook (
+    refresh_token VARCHAR(255) PRIMARY KEY,
+    device VARCHAR(255) NOT NULL,
+    is_active TINYINT NOT NULL DEFAULT 1,
+    user_id VARCHAR(255) NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES UsersLabook(id)
+);

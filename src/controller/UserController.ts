@@ -4,6 +4,7 @@ import { HashManager } from "../services/HashManager";
 import { Authenticator } from "../services/Authenticator";
 import { IdGenerator } from "../services/IdGenerator";
 import { UserDatabase } from "../data/UserDatabase";
+import { RefreshTokenDatabase } from "../data/RefreshTokenDatabase";
 
 export class UserController {
 
@@ -12,7 +13,8 @@ export class UserController {
             const userData = {
                 name: req.body.name,
                 email: req.body.email,
-                password: req.body.password
+                password: req.body.password,
+                device: req.body.device
             }
 
             const passwordHash = new HashManager()
@@ -20,10 +22,29 @@ export class UserController {
             const idCreator = new IdGenerator()
             const id = idCreator.generate()
             const tokenCreator = new Authenticator()
-            const token = tokenCreator.generateToken({id})
+            const token = tokenCreator.generateToken({id}, process.env.EXPIRES_IN)
 
-            new UserBusiness().signup(userData.name, userData.email, id, hash)
-            res.status(200).send({ token });
+            await new UserBusiness().signup(userData.name, userData.email, id, hash)
+
+            const refreshToken = tokenCreator.generateToken(
+              {
+                 id,
+                 device: userData.device
+              },
+              process.env.REFRESH_TOKEN_EXPIRES_IN
+            )
+
+            const refreshTokenDb = new RefreshTokenDatabase()
+            await refreshTokenDb.createRefreshToken(
+              refreshToken,
+              userData.device,
+              true,
+              id
+            )
+            res.status(200).send({ 
+              acessToken: token,
+              refreshToken: refreshToken
+             });
         } catch (err) {
             res.status(400).send({ err: err });
         }
@@ -33,7 +54,8 @@ export class UserController {
         try {
             const userData = {
                 email: req.body.email,
-                password: req.body.password
+                password: req.body.password,
+                device: req.body.device
             }
 
             if (userData.password.length < 6 || userData.email.length === 0 && !userData.email.includes("@")) {
@@ -55,10 +77,38 @@ export class UserController {
           
               const authenticator = new Authenticator();
               const token = authenticator.generateToken({
-                id: user.id
-              });
+                id: user.id,
+                device: userData.device
+              }, process.env.EXPIRES_IN);
+
+              const refreshToken = authenticator.generateToken(
+                {
+                  id: user.id,
+                  device: userData.device
+                },
+                process.env.REFRESH_TOKEN_EXPIRES_IN
+              )
+
+
+
+              const refreshTokenDatabase = new RefreshTokenDatabase()
+
+              const refreshTokenFromDb = await refreshTokenDatabase.getRefreshTokenByUserIdAndDevice(user.id, userData.device)
+              if (refreshTokenFromDb !== undefined) {
+                await refreshTokenDatabase.deleteRefreshToken(refreshTokenFromDb.refreshToken)
+              }
+
+              await refreshTokenDatabase.createRefreshToken(
+                refreshToken,
+                userData.device,
+                true,
+                user.id
+              )
           
-              res.status(200).send({ token });
+              res.status(200).send({ 
+                acessToken: token,
+                refreshToken: refreshToken
+               });
           
           
             } catch (err) {
@@ -90,11 +140,11 @@ export class UserController {
     async deleteFriendship(req:Request, res:Response){
       try{
         const tokenCreator = new Authenticator()
-        const verifyToken = tokenCreator.getData(req.headers.authorization as string)
+        // const verifyToken = tokenCreator.getData(req.headers.authorization as string)
         const userData = {
           id: req.body.id
         }
-        const userManager = await new UserBusiness().deleteFriend(userData.id)
+        await new UserBusiness().deleteFriend(userData.id)
         res.status(200).send({
           message: 'Friendship finished'
         })
