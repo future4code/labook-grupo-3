@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { Authenticator } from "../services/Authenticator";
 import { PostBusiness } from "../business/PostBusiness";
 import { PostDatabase } from "../data/PostDatabase";
+import { PostType } from "../model/Post";
 
 export class PostController {
 
@@ -33,7 +34,7 @@ export class PostController {
         }
     }
 
-    public async feed(req: Request, res: Response) {
+    public async allPosts(req: Request, res: Response) {
         try {
             const token = req.headers.authorization as string;
             const authenticator = new Authenticator().getData(token);
@@ -56,11 +57,22 @@ export class PostController {
 
     public async feedType(req: Request, res: Response) {
         try {
-            const type = req.params.type
+            const page = Number(req.query.page)
+            const orderBy = req.query.orderBy as string
             const token = req.headers.authorization as string;
             const authenticator = new Authenticator().getData(token);
 
-            const feed = await new PostBusiness().getFeedType(type)
+            let type = PostType.NORMAL
+            try {
+                const typeQuery = req.query.type as string
+                if (typeQuery === "EVENTOS"){
+                    type = PostType.EVENT
+                }
+            } catch (err) {
+                res.status(400).send({ err: err.message });
+            }
+
+            const feed = await new PostBusiness().getFeedType(type, page, orderBy)
 
             res.status(200).send({
                 feed: feed

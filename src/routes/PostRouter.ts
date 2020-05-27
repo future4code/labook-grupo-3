@@ -3,13 +3,15 @@ import { PostController } from "../controller/PostController";
 
 export const postRouter = express.Router();
 
-postRouter.post("/createpost", new PostController().createPost)
+const postController = new PostController()
 
-postRouter.get("/feed", new PostController().feed)
+postRouter.post("/createpost", postController.createPost)
 
-postRouter.get("/feed/:type", new PostController().feedType)
+postRouter.get("/feed", postController.feedType)
 
-postRouter.post("/unlike", new PostController().unlike)
+postRouter.get("/allPosts", postController.allPosts)
 
-postRouter.post("/like", new PostController().likePost)
+postRouter.post("/unlike", postController.unlike)
+
+postRouter.post("/like", postController.likePost)
 
