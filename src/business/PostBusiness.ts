@@ -1,5 +1,6 @@
 import { PostDatabase } from "../data/PostDatabase";
 import { IdGenerator } from "../services/IdGenerator";
+import { PostOrderBy } from "../model/Post";
 
 export class PostBusiness {
 
@@ -14,8 +15,11 @@ export class PostBusiness {
         return await new PostDatabase().getAllPosts();
     }
 
-    public async getFeedType(type: string) {
-        return await new PostDatabase().getPostsByType(type)
+    public async getFeedType(type: string, page: number, orderBy: string) {
+        const postPerPage = 3;
+        let offset = postPerPage * (page-1)
+        return await new PostDatabase()
+            .getPostsByType(type, PostBusiness.mapStringToOrderBy(orderBy), postPerPage, offset)
     }
 
     public async unLike(idUser: string, idPost: string) {
@@ -26,5 +30,16 @@ export class PostBusiness {
     public async setLike(id_user: string, id_post: string) {
         return await new PostDatabase().likePost(id_user, id_post)
 
+    }
+
+    static mapStringToOrderBy(orderBy: string): PostOrderBy{
+        switch(orderBy.toUpperCase()){
+            case "RECENTES":
+                return PostOrderBy.RECENT;
+            case "ANTIGOS":
+                return PostOrderBy.OLD;
+            default:
+                throw new Error("Tipo de ordem inválida");
+        }
     }
 }

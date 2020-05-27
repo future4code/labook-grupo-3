@@ -30,11 +30,17 @@ export class PostDatabase extends BaseDataBase {
         return result[0]
     }
 
-    public async getPostsByType(type: string): Promise<any> {
-        const result = await this.getConnection().raw(`
-            SELECT * FROM sagan_andrius_db.PostsLabook 
-            WHERE type = "${type}" ORDER BY createdAt DESC;`)
-        return result[0]
+    public async getPostsByType(
+        type: string,
+        orderBy: string,
+        postPerPage: number,
+        offset: number
+        ): Promise<any> {
+            const result = await this.getConnection().raw(`
+                SELECT * FROM sagan_andrius_db.PostsLabook 
+                WHERE type = "${type}" ORDER BY createdAt 
+                ${orderBy} LIMIT ${postPerPage} OFFSET ${offset};`)
+            return result[0]
     }
 
     public async setUnlikePost(idUser: string, idPost: string): Promise<any> {
