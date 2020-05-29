@@ -7,8 +7,9 @@ export class Post{
         private type: string,
         private idUser: string,
         private createdAt: string
-    ){}
+    ){
 
+    }
 }
 
 export enum PostType{

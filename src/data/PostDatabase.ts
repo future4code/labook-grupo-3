@@ -28,7 +28,7 @@ export class PostDatabase extends BaseDataBase {
         const result = await this.getConnection().raw(`
         SELECT * FROM sagan_andrius_db.PostsLabook 
         ORDER BY createdAt DESC;`)
-        return result[0].map(post=>{return new Post(post.id,post.image,post.description,post.type,post.id_user,post.createdAt)})
+        return result[0].map(post=>{return new Post(post.id,post.image,post.description,post.type,post.id_user,moment(post.createdAt).format("DD/MM/YYYY"))})
     }
 
     public async getPostsByType(
@@ -41,7 +41,7 @@ export class PostDatabase extends BaseDataBase {
                 SELECT * FROM sagan_andrius_db.PostsLabook 
                 WHERE type = "${type}" ORDER BY createdAt 
                 ${orderBy} LIMIT ${postPerPage} OFFSET ${offset};`)
-            return result[0].map(post=>{return new Post(post.id,post.image,post.description,post.type,post.id_user,post.createdAt)})
+            return result[0].map(post=>{return new Post(post.id,post.image,post.description,post.type,post.id_user,moment(post.createdAt).format("DD/MM/YYYY"))})
     }
 
     public async setUnlikePost(idUser: string, idPost: string): Promise<any> {
