@@ -4,14 +4,19 @@ export class UserDatabase extends BaseDataBase {
     tableName: string = "UsersLabook";
 
     public async signup(name: string, email: string, id: string, password: string) {
-        return await super.getConnection()
-            .insert({
-                id,
-                name,
-                email,
-                password
-            })
-            .into(this.tableName)
+        if (await this.getUserEmail(email) !== undefined) {
+            throw new Error('Oooops! Email já cadastrado.');
+        }
+        else {
+            return await super.getConnection()
+                .insert({
+                    id,
+                    name,
+                    email,
+                    password
+                })
+                .into(this.tableName)
+        }
     }
 
     public async getUserEmail(email: string): Promise<any> {
