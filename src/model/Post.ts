@@ -1,5 +1,4 @@
 export class Post{
-
     constructor(
         private id: string,
         private image: string,

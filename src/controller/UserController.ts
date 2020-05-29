@@ -46,7 +46,7 @@ export class UserController {
         refreshToken: refreshToken
       });
     } catch (err) {
-      res.status(400).send({ err: err });
+      res.status(400).send({ err: err.message });
     } finally {
       new UserDatabase().destroyConnection()
     }
