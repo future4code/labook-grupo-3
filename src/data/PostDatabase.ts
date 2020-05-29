@@ -1,5 +1,6 @@
 import { BaseDataBase } from "./BaseDatabase";
 import moment from 'moment'
+import { Post } from "../model/Post";
 
 export class PostDatabase extends BaseDataBase {
     tablename: string = "PostsLabook"
@@ -23,11 +24,11 @@ export class PostDatabase extends BaseDataBase {
             )`)
     }
 
-    public async getAllPosts(): Promise<any> {
+    public async getAllPosts(): Promise<Post[]> {
         const result = await this.getConnection().raw(`
         SELECT * FROM sagan_andrius_db.PostsLabook 
         ORDER BY createdAt DESC;`)
-        return result[0]
+        return result[0].map(post=>{return new Post(post.id,post.image,post.description,post.type,post.id_user,post.createdAt)})
     }
 
     public async getPostsByType(
@@ -35,12 +36,12 @@ export class PostDatabase extends BaseDataBase {
         orderBy: string,
         postPerPage: number,
         offset: number
-        ): Promise<any> {
+        ): Promise<Post[]> {
             const result = await this.getConnection().raw(`
                 SELECT * FROM sagan_andrius_db.PostsLabook 
                 WHERE type = "${type}" ORDER BY createdAt 
                 ${orderBy} LIMIT ${postPerPage} OFFSET ${offset};`)
-            return result[0]
+            return result[0].map(post=>{return new Post(post.id,post.image,post.description,post.type,post.id_user,post.createdAt)})
     }
 
     public async setUnlikePost(idUser: string, idPost: string): Promise<any> {
